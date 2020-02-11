@@ -76,6 +76,7 @@ int main() {
   assert(pinnable_val == "value");
   pinnable_val.Reset();
   // The Slice pointed by pinnable_val is not valid after this point
+  fprintf(stderr, "done\n");
 
   delete db;
 

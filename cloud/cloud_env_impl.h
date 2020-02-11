@@ -299,6 +299,9 @@ class CloudEnvImpl : public CloudEnv {
 
   // scratch space in local dir
   static constexpr const char* SCRATCH_LOCAL_DIR = "/tmp";
+
+  // Returns true iff the named directory exists and is a directory.
+  bool dirExists(const std::string& dname);
 };
 
 }  // namespace rocksdb

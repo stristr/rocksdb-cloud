@@ -16,8 +16,9 @@ std::string kDBPath = "/tmp/rocksdb_cloud_durable";
 // ensure that this bucket name is unique to you and does not
 // conflict with any other S3 users who might have already created
 // this bucket name.
-std::string kBucketSuffix = "cloud.durable.example.";
-std::string kRegion = "us-west-2";
+//std::string kBucketSuffix = "cloud.durable.example.";
+std::string kBucketSuffix = "dbtest.pn";
+std::string kRegion = "us-east-1";
 
 static const bool flushAtEnd = true;
 static const bool disableWAL = false;
@@ -42,11 +43,13 @@ int main() {
   // Append the user name to the bucket name in an attempt to make it
   // globally unique. S3 bucket-names need to be globally unique.
   // If you want to rerun this example, then unique user-name suffix here.
-  char* user = getenv("USER");
-  kBucketSuffix.append(user);
+  //char* user = getenv("USER");
+  //const char* user = "bk";
+  //kBucketSuffix.append(user);
 
   // "rockset." is the default bucket prefix
-  const std::string bucketPrefix = "rockset.";
+  //const std::string bucketPrefix = "rockset.";
+  const std::string bucketPrefix = "bk.";
   cloud_env_options.src_bucket.SetBucketName(kBucketSuffix,bucketPrefix);
   cloud_env_options.dest_bucket.SetBucketName(kBucketSuffix,bucketPrefix);
 
@@ -55,6 +58,7 @@ int main() {
   
   // Create a new AWS cloud env Status
   CloudEnv* cenv;
+  cloud_env_options.keep_local_sst_files = true;
   Status s =
       CloudEnv::NewAwsEnv(Env::Default(),
                           kBucketSuffix, kDBPath, kRegion,
@@ -102,6 +106,7 @@ int main() {
     WriteBatch batch;
     batch.Delete("key1");
     batch.Put("key2", value);
+    batch.Put("key3", "value3");
     s = db->Write(wopt, &batch);
   }
 
