@@ -16,8 +16,9 @@ std::string kDBPath = "/tmp/rocksdb_cloud_durable";
 // ensure that this bucket name is unique to you and does not
 // conflict with any other S3 users who might have already created
 // this bucket name.
-std::string kBucketSuffix = "cloud.durable.example.";
-std::string kRegion = "us-west-2";
+//std::string kBucketSuffix = "cloud.durable.example.";
+std::string kBucketSuffix = "dbtest.pn";
+std::string kRegion = "us-east-1";
 
 int main() {
   // cloud environment config options here
@@ -39,11 +40,11 @@ int main() {
   // Append the user name to the bucket name in an attempt to make it
   // globally unique. S3 bucket-names need to be globally unique.
   // If you want to rerun this example, then unique user-name suffix here.
-  char* user = getenv("USER");
-  kBucketSuffix.append(user);
+  //char* user = getenv("USER");
+  //kBucketSuffix.append(user);
 
   // "rockset." is the default bucket prefix
-  const std::string bucketPrefix = "rockset.";
+  const std::string bucketPrefix = "bk.";
   cloud_env_options.src_bucket.SetBucketName(kBucketSuffix,bucketPrefix);
   cloud_env_options.dest_bucket.SetBucketName(kBucketSuffix,bucketPrefix);
   

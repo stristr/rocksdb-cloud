@@ -26,8 +26,8 @@ std::string kClonePath = "/tmp/rocksdb_clone_db";
 // In this example, the database and its clone are both stored in
 // the same bucket (obviously with different pathnames).
 //
-std::string kBucketSuffix = "cloud.clone.example.";
-std::string kRegion = "us-west-2";
+std::string kBucketSuffix = "dbtest.pn";
+std::string kRegion = "us-east-1";
 
 //
 // Creates and Opens a clone
@@ -99,10 +99,10 @@ int main() {
   // Append the user name to the bucket name in an attempt to make it
   // globally unique. S3 bucket-namess need to be globlly unique.
   // If you want to rerun this example, then unique user-name suffix here.
-  char* user = getenv("USER");
-  kBucketSuffix.append(user);
+  //char* user = getenv("USER");
+  //kBucketSuffix.append(user);
 
-  const std::string bucketPrefix = "rockset.";
+  const std::string bucketPrefix = "bk.";
   // create a bucket name for debugging purposes
   const std::string bucketName = bucketPrefix + kBucketSuffix;
 

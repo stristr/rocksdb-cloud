@@ -20,6 +20,9 @@
 #include "rocksdb/status.h"
 #include "util/xxhash.h"
 
+#include <sys/types.h>
+#include <sys/stat.h>
+
 namespace rocksdb {
 
 CloudEnvImpl::CloudEnvImpl(const CloudEnvOptions& opts, Env* base,
@@ -681,6 +684,15 @@ Status CloudEnvImpl::LoadCloudManifest(const std::string& local_dbname,
   return st;
 }
 
+// Returns true iff the named directory exists and is a directory.
+bool CloudEnvImpl::dirExists(const std::string& dname) {
+  struct stat statbuf;
+  if (stat(dname.c_str(), &statbuf) == 0) {
+    return S_ISDIR(statbuf.st_mode);
+  }
+  return false; // stat() failed return false
+}
+
 //
 // Create appropriate files in the clone dir
 //
@@ -767,8 +779,17 @@ Status CloudEnvImpl::SanitizeDirectory(const DBOptions& options,
       continue;
     }
     std::string pathname = local_name + "/" + file.name;
+    if (dirExists(pathname)) {
+      Log(InfoLogLevel::ERROR_LEVEL, info_log_,
+          "[cloud_env_impl] SanitizeDirectory skipping deleting dir '%s'",
+          pathname.c_str());
+      continue;
+    }
     st = env->DeleteFile(pathname);
     if (!st.ok()) {
+      Log(InfoLogLevel::ERROR_LEVEL, info_log_,
+          "[cloud_env_impl] SanitizeDirectory could not delete: '%s'",
+          pathname.c_str());
       return st;
     }
     Log(InfoLogLevel::INFO_LEVEL, info_log_,
